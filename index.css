@@ -1,0 +1,118 @@
+.logo{
+    width: 10%;
+    float: none;
+    margin: auto;
+}
+.Menu{
+    border-bottom: 1px solid gray;
+   
+}
+.Menu ul{
+list-style-type: none;
+}
+.Menu ul li{
+    display: inline;
+    padding: 1%;
+}
+.Menu ul li a{
+    text-decoration: none;
+    font-weight: bold;
+    color: #ff6b81;
+}
+.Menu ul li a:hover{
+    color: #ff4757;
+}
+/* menu content*/
+.main-content{
+    background-color: #a3bfdb;
+    padding: 3% 0;
+}
+.col-4{
+    width: 18%;
+    color:#970c21;
+    background-color: rgb(210, 219, 223);
+    margin: 1%;
+    padding: 2%;
+    float: left;
+}
+.text-center{
+
+        text-align: right;
+    }
+.link {
+    text-align:center;
+}
+.mar{
+    height:10%;
+    width: 100%;
+    text-align: center;
+    background-image: url('food.jpg');
+    color: black;
+    font: 100;
+}
+.clearfix{
+    float: none;
+    clear: both;
+}
+.footer{
+
+    background-color: #ff4757;
+    color: white;
+    text-align: center;
+}
+ /*CSS for footer*/
+ .wrapper{
+    padding: 1%;
+    width: 80%;
+    margin: 0 auto;
+ }
+ .btn-primary{
+    background-color: #1e90ff;
+    padding: 1%;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+.btn-secondary{
+    background-color:#ff4757;
+    padding: 1%;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+.btn-secondary:hover{
+    background-color: #2ed573;
+}
+
+.btn-danger{
+    background-color: #5fadcc;
+    padding: 1%;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+.btn-danger:hover{
+    background-color: #6d6feb;
+}
+.success{
+    color:#2ed573 ;
+}
+.error{
+    color: #ff4757;
+}
+.tbl-full{
+    width: 100%;
+    }
+    table tr th{
+        border-bottom: 1px solid black;
+        padding: 1%;
+        text-align: left;
+    }
+    table tr td{
+        padding: 10px;
+        text-align: left;
+    }
+    table tr
+    {
+        border-bottom: 1px solid grey;
+    }
