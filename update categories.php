@@ -28,7 +28,8 @@
                     $active=$row['active'];
 
                 }
-            }else
+            }
+            else
             {
                 //Redirect to Manage Admin Page
                 header('lacation:'.SITEURL.'admin/categories.php');
@@ -41,7 +42,7 @@
         <br><br>
 
     <form action="" method="POST" enctype="multipart/form-data">
-        <table>
+        <table class = "tbl-full">
             <tr>
                 <td>Title:</td>
                 <td>
@@ -57,7 +58,8 @@
                             {
                                 //Image not available
                                 echo "<div class'error'>Image not Available.</div>";
-                            }else
+                            }
+                            else
                             {
                                 //Image available
                                 ?>
@@ -72,6 +74,7 @@
                 <td>New Image:</td>
                 <td>
                     <input type="file" name="image">
+                  
                 </td>
             </tr>
 
@@ -97,6 +100,7 @@
                             <Input type="hidden" name="current_image" value="<?php echo $image_name ?>">
                             <input type="submit" name="submit" value="Update" class="btn-secondary">
                         </td>
+                        
                     </tr>
         </table>
 
@@ -104,8 +108,6 @@
         <?php 
             if(isset($_POST['submit']))
             {
-                //Update the food in  database
-
                 //1. Get the data from form
                 $title = $_POST['title'];
                 $current_image =$_POST['current_image'];
@@ -132,14 +134,83 @@
                     //Set the Default value
                     $active   = "No";
                 }
-                //2. Upload the image if select
-                //Check whether the image select or not and set the value for image accoridingly
-                        //print_r($_FILES['image']);
-                        //die();//Break the code here
-                if(isset($_FILES['image']['name']))
+                $choose_image = $_FILES['image']['name'];
+
+                if($choose_image!="")
                     {
-                            //Upload the image
-                            $image_name = $_FILES['image']['name'];
+                        //Upload the image
+                        $image_name = $_FILES['image']['name'];
+                        //Auto Rename image 
+                        //Get the extention if our image (jpg,png,gif,etc) e.g "Special.food.jpg"
+                            $ext = end(explode('.',$image_name));
+                            //Rename the image
+                            $image_name = "Food_Category_".rand(000,999).'.'.$ext;//e.g Food_Category_832.jpg
+
+                            $source_path= $_FILES['image']['tmp_name'];
+                            $destination="../images/category/".$image_name;
+
+                            //Finally upload image
+                            $upload = move_uploaded_file($source_path,$destination);
+                            //Check whether the image upload or not
+                            //And if the image is not upload then we will stop the proccess and redirect with the error message
+                            if($upload==false)
+                            {
+                                //Set message
+                                $_SESSION['upload'] ="<div class='error'>Fialed to upload Image.</div>";
+                                header('lacation:'.SITEURL.'admin/manage-categories.php');
+                                //Stop the proccess
+                                die();
+                            }
+                             //Remove current image if available
+                             if($current_image!="")
+                             {
+                                 //Cureent image is available
+                                 //Remove the image
+                                 $remove_path = "../images/category/".$current_image;
+                                 $remove = unlink($remove_path);
+                                 //Check whether the image removed or not
+                                 if($remove==false)
+                                 {
+                                     //Failed to remove current image
+                                     $_SESSION['remove-failed'] = "<div class='error'>Failed to remove current image.</div>";
+                                     //Redirect to manage-food
+                                     header('location:'.SITEURL.'admin/manage-categories.php');
+                                     die();
+                                 }
+                             }
+
+                    }else
+                    {
+                        $image_name = $current_image;
+                    }
+                //Insert into database
+                    $sql3 = "UPDATE tbl_category SET
+                    title = '$title',
+                    image_name  = '$image_name',
+                    featured = '$featured',
+                    active   = '$active'
+                    WHERE id=$id
+                    ";
+                //3. Execute Query
+                $res3 = mysqli_query($conn,$sql3);
+
+                if($res3==true)
+                {
+                    //4. Check whether the query executed or not data add or not
+                    $_SESSION['update-category'] = "<div class='success'>Category Update Successfully.</div?";
+                    //Redirect to Manage Category Page
+                    header("location:".SITEURL.'admin/manage-categories.php');
+                }
+                else
+                {
+                    //Failed to add category
+                    $_SESSION['update-category'] = "<div class='error'>Failed to Update Category.</div?";
+                    //Redirect to Manage Category Page
+                    header("location:".SITEURL.'admin/manage-categories.php');
+                }
+                
+    
+                             /*
 
                             //Check whether the image is select or not and upload image only if select
                         if($image_name!="")
@@ -159,6 +230,7 @@
                             //Check whether the image upload or not
                             //And if the image is not upload then we will stop the proccess and redirect with the error message
                             if($upload==false)
+
                             {
                                 //Set message
                                 $_SESSION['upload'] ="<div class='error'>Fialed to upload Image.</div>";
@@ -166,6 +238,10 @@
                                 //Stop the proccess
                                 die();
                             }
+                               else
+                                {
+                                    $image_name = $current_image;
+                                 }  
                             //Remove current image if available
                             if($current_image!="")
                             {
@@ -174,6 +250,7 @@
                                 $remove_path = "../images/category/".$current_image;
                                 $remove = unlink($remove_path);
                                 //Check whether the image removed or not
+                                
                                 if($remove==false)
                                 {
                                     //Failed to remove current image
@@ -182,13 +259,12 @@
                                     header('location:'.SITEURL.'admin/categories.php');
                                     die();
                                 }
+                                 
+                                
                             }
                         }
                         }
-                         else
-                        {
-                            $image_name = $current_image;
-                        }    
+                        
                         //Insert into database
                         $sql3 = "UPDATE tbl_category SET
                         title = '$title',
@@ -206,14 +282,20 @@
                         $_SESSION['update-category'] = "<div class='success'>Category Update Successfully.</div?";
                         //Redirect to Manage Category Page
                         header("location:".SITEURL.'admin/categories.php');
-                    }else
+                    }
+                    else
                     {
                         //Failed to add category
                         $_SESSION['update-category'] = "<div class='error'>Failed to Update Category.</div?";
                         //Redirect to Manage Category Page
                         header("location:".SITEURL.'admin/categories.php');
-                    }
+                    }*/
+                    
+            }else
+            {
+                echo "Not submit";
             }
+        
         ?>
     </div>
 </div>
