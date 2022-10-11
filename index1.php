@@ -1,6 +1,75 @@
 <?php include('partials-frontend/header.php')?>
 <?php include('config/constants.php')?>
-<section class="food-menu">
+    <!-- fOOD sEARCH Section Starts Here -->
+    <section class="food-search text-center">
+        <div class="container">
+            
+            <form action="food-search.html" method="POST">
+                <input type="search" name="search" placeholder="Search for Food.." required>
+                <input type="submit" name="submit" value="Search" class="btn btn-primary">
+            </form>
+
+        </div>
+    </section>
+    <!-- fOOD sEARCH Section Ends Here -->
+
+    <!-- CAtegories Section Starts Here -->
+    <section class="categories">
+        <div class="container">
+            <h2 class="text-center">Explore Foods</h2>
+            <?php 
+            //Create quary to get date from database 
+
+            $sql = "SELECT * FROM tbl_category WHERE active='Yes' AND featured='Yes' LIMIT 3";
+            //Execute query
+            $res = mysqli_query($conn,$sql);
+            //Count the rows
+            $count = mysqli_num_rows($res);
+            if($count>0)
+            {
+              
+            //Category is available
+             while($row=mysqli_fetch_assoc($res))
+                    {
+                    //Get the values like ID,title,image_name
+                       $title = $row['title'];
+                       $image_name=$row['image_name'];
+                        ?>
+                    <a href="admin/manage-categories.php">
+                    <div class="box-3 float-container">
+                    <?php
+                    if($image_name=="")
+                    {
+                      //Display the message
+                      echo "<div class='error'>Categoried not Available.</div>";  
+                    }else
+                    {
+                      //Image Available
+                      ?>
+                        <img src="<?php echo SITEURL; ?>images/category/<?php echo $image_name; ?>" alt="Pizza" class="img-responsive img-curve">
+                    <?php  
+                    }
+                    ?>
+
+                    <h3 class="float-text text-white"><?php echo $title; ?></h3>
+                    </div>
+                    </a>
+                        <?php
+                    }
+            }else
+            {
+                //Categories not available
+                echo "<div class='error'>Categoried not Added.</div>";
+            }
+            ?>
+
+            <div class="clearfix"></div>
+        </div>
+    </section>
+    <!-- Categories Section Ends Here -->
+
+    <!-- fOOD MEnu Section Starts Here -->
+    <section class="food-menu">
         <div class="container">
             <h2 class="text-center">Food Menu</h2>
 
